@@ -101,7 +101,7 @@ const OBJ=[
 ["necklace","metal",1,"I feel it wants to circle something…"],["nail clippers","metal",2,"I feel something that trims…"],["needle","metal",3,"Something thin… with a point."],["napkin","soft",1,"I feel it's for cleaning up…"],["nicotine pouch","soft",2,"I'm getting a craving…"],
 ["pin","metal",1,"I'm getting something meant to be seen…"],["paper clip","metal",2,"I feel it holds things together…"],["pen cap","plastic",1,"I feel it's protecting something…"],["pick","plastic",2,"I'm hearing music…"],["playing card","soft",1,"I feel it's one of many…",["plastic"]],["photo","soft",2,"I'm seeing a face… a memory."],
 ["phone","other",9,"",["metal","plastic"],true],["pill","other",1,"I sense something for your body…"],["perfume sample","other",2,"I'm getting a scent…"],["prayer beads","other",3,"I feel something calm…"],
-["ring","metal"],["receipt","soft",1,"I'm seeing numbers…"],["rolling papers","soft",2,"Something thin…"],["rubber band","soft",3,"I feel tension…"],["rope","soft",9,"",[],true],["remote control","plastic",1,"I feel something in control…"],
+["ring","metal",1,"I feel it wants to circle something…"],["receipt","soft",1,"I'm seeing numbers…"],["rolling papers","soft",2,"Something thin…"],["rubber band","soft",3,"I feel tension…"],["rope","soft",9,"",[],true],["remote control","plastic",1,"I feel something in control…"],
 ["safety pin","metal"],["smartphone","other",0,"",["metal","plastic"]],["sunglasses","plastic",1,"I'm getting brightness…"],["SIM card","plastic",2,"Something tiny… connecting."],["scrunchie","soft",1,"Something soft… that holds on."],["sticky note / notes","soft",2,"I feel it wants you to remember something…"],["shoelace","soft",3,"I feel something that ties…"],["string","soft",9,"",[],true],
 ["thumb drive","plastic"],["ticket","soft",1,"I'm seeing a place…"],["tissue / tissue paper / tissue packet","soft",2,"Something soft… for cleaning up."],["tampon","soft",3,"I sense something personal…"],["toilet paper","soft",9,"",[],true],["tweezers","metal",1,"I feel something that pinches…"],["toothpick","other"],
 ["USB drive","plastic"],["vape","metal",0,"",["plastic"]],
@@ -115,7 +115,7 @@ const SETS=[
 ["money","matchbox","earring"],["napkin","nicotine pouch","vape"],["pin","paper clip","hair tie"],["phone","pill","prayer beads","iPhone"],
 ["receipt","rolling papers","rubber band"],["sunglasses","SIM card","USB drive"],["scrunchie","sticky note / notes","worry stone"],
 ["ticket","tissue / tissue paper / tissue packet","tampon"],["wallet","wet wipe","dice / die"],["watch","whistle","smartphone"],
-["earplug","eraser","gum"],["hair clip","hearing aid","memory card"],["pick","pen cap","playing card"],["bottle cap","flashlight","safety pin"],["chapstick","cap (bottle or pen cap)","bottle cap","pen cap"],["cork","cell phone","playing card"],["bottle cap","battery","perfume sample"],["credit card","cell phone","cap (bottle or pen cap)"],["mirror","mint","match"],["necklace","nail clippers","needle"],["scrunchie","sticky note / notes","shoelace","string"],["matchbox","marble","toilet paper"],["playing card","photo","rope"],["cash","card","cork"],["earbuds","earplug","eraser"],["flashlight","fidget spinner","flower"],["glasses","guitar pick","gum"],["hair clip","hearing aid","hair tie"],["locket","lighter","Lego brick"],["memory card","mirror","mint"],["pill","perfume sample","prayer beads"],["iPhone","ID card","inhaler"]];
+["earplug","eraser","gum"],["hair clip","hearing aid","memory card"],["pick","pen cap","playing card"],["bottle cap","flashlight","safety pin"],["chapstick","cap (bottle or pen cap)","bottle cap","pen cap"],["cork","cell phone","playing card"],["bottle cap","battery","perfume sample"],["credit card","cell phone","cap (bottle or pen cap)"],["mirror","mint","match"],["necklace","nail clippers","needle"],["scrunchie","sticky note / notes","shoelace","string"],["matchbox","marble","toilet paper"],["playing card","photo","rope"],["cash","card","cork"],["earbuds","earplug","eraser"],["flashlight","fidget spinner","flower"],["glasses","guitar pick","gum"],["hair clip","hearing aid","hair tie"],["locket","lighter","Lego brick"],["memory card","mirror","mint"],["pill","perfume sample","prayer beads"],["iPhone","ID card","inhaler"],["ring","remote control","rope"]];
 const SPLIT={"C-plastic":{q:"I feel it has something to do with your mouth…",groups:[
  {label:"If yes · mouth",set:27,items:[["chapstick","I'm drawn to your lips…"],["cap (bottle or pen cap)","I feel it closes something…"]]},
  {label:"If no",set:6,items:[["car key","I'm seeing a journey…"],["credit card","I sense value…"],["contact lens case","I'm drawn to your eyes…"]]}]}};
@@ -123,10 +123,11 @@ const SPLIT={"C-plastic":{q:"I feel it has something to do with your mouth…",g
 const COMBO_PHOTO={"M-other":[31,34],"N-metal":[32],"S-soft":[33],"P-soft":[35],
  "C-soft":[36],"E-plastic":[37],"E-soft":[37],"F-all":[38,7],"I-all":[44],
  "L-metal":[41],"L-plastic":[11,41],"L-all":[11,41],"M-plastic":[42],"P-other":[43,16],
+ "R-metal":[45,17],"R-plastic":[45,17],"R-soft":[17,45],"R-all":[17,45],
  "G-all":[39],"H-metal":[9,40],"H-plastic":[40,9],"H-soft":[40,9],"H-all":[40,9]};
-const ALL_OLD={"G-all":[8,23],"H-all":[24,9,15],"F-all":[26,7],"I-all":[10,16],"L-all":[11,7]};
+const ALL_OLD={"G-all":[8,23],"H-all":[24,9,15],"F-all":[26,7],"I-all":[10,16],"L-all":[11,7],"R-all":[17,1,35]};
 const ALL_ORDER={I:["iPhone","ID card","inhaler"],F:["flashlight","fidget spinner","flower","flash drive"]}; // until the new photos exist
-const AUTO_ALL=new Set(["F","G","I"]),SKIP_OPT=new Set(["H","L"]);
+const AUTO_ALL=new Set(["F","G","I"]),SKIP_OPT=new Set(["H","L","R"]);
 const has=n=>!!(n&&PHOTO_FILES[n]);
 const ALSO_OLD={"M-other":13}; // used until the new extras photo exists
 const alsoOf=k=>has(ALSO_PHOTO[k])?ALSO_PHOTO[k]:(ALSO_OLD[k]||null);
