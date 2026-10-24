@@ -182,9 +182,9 @@ function render(){
   const alsoF=also.filter(o=>!shown.includes(o[0]));
   const item=(n,line,i,multi)=>`<a class="item" href="${link(n)}" target="_blank" rel="noopener"><b>${multi?`<span class="num">${i+1}</span>`:""}${esc(n)}</b>${multi&&line?`<span>${esc(line)}</span>`:""}</a>`;
   const photoBtn=list=>{const L2=list.filter((x,i)=>x&&list.indexOf(x)===i);const n=L2.length;
-   const how=n===1?"The photo opens dated today, and their object is in it. Just show it.":
-    n===2?"The photo opens dated yesterday. If their object is in it, reveal. If not, say: “Oh, sorry, that's yesterday's photo,” point to the date, and swipe right to today's.":
-    "The photo opens dated two days ago. If their object isn't in it, say: “Oh, sorry, that's an older photo,” point to the date, and swipe right. Swipe once more if needed. The last photo is today's.";
+   const how=n===1?"The photo opens without a date, and their object is in it. Just show it.":
+    n===2?"The photo opens without a date. If their object is in it, reveal. If not, say: “Oh, sorry, that's yesterday's photo,” tap the photo to show its date (yesterday), then swipe right to today's.":
+    "The photo opens without a date (it's from two days ago). If their object isn't in it, say: “Oh, sorry, that's an older photo,” tap the photo to show its date, then swipe right. Swipe once more if needed. The last photo is today's.";
    return `<p class="howto">${how}</p><button class="photo" data-list="${L2.join(",")}">Show photo</button>`};
   const body=sp?
    box(4,"Ask first",sp.q)+box(5,"Instant out",REVEAL)+
@@ -216,15 +216,16 @@ function slide(n){const f=PHOTO_FILES[n],names=(SHOWN[n]||SETS[n-1]||[]);
  return f?`<img src="${f}" alt="">`:`<div class="ph-empty"><p class="ph-n">Photo ${n}</p><p class="ph-list">${names.map(esc).join("<br>")}</p><p class="ph-hint">Photo not added yet</p></div>`}
 function drawViewer(){const now=new Date(),y=new Date(now.getTime()-864e5);
  const back=vList.length-1-vIdx;const d=new Date(now.getTime()-back*864e5);const t=["8:37 AM","8:14 AM","8:22 AM"][back]||"8:05 AM";
- viewer.innerHTML=`<div class="vimg">${slide(vList[vIdx])}</div><div class="vbar"><button class="vx" id="vx" aria-label="Close photo">✕</button><div class="vdate"><b>${esc(d.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}))}</b><span>${esc(d.toLocaleDateString("en-US",{weekday:"long"}))} · ${t}</span></div><span class="vsp"></span></div>`}
-function go2(i,dir){if(i<0||i>=vList.length||i===vIdx)return;vIdx=i;drawViewer();const im=viewer.querySelector(".vimg");if(im){im.classList.add(dir>0?"in-r":"in-l")}}
-function openViewer(list){vList=list;vIdx=0;drawViewer();viewer.hidden=false;if(!vOpen){vOpen=true;try{history.pushState({v:1},"")}catch(e){}}}
+ viewer.innerHTML=`<div class="vimg">${slide(vList[vIdx])}</div><div class="vbar"><button class="vx" id="vx" aria-label="Close photo">✕</button><div class="vdate"${vDate?"":` style="visibility:hidden"`}><b>${esc(d.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"}))}</b><span>${esc(d.toLocaleDateString("en-US",{weekday:"long"}))} · ${t}</span></div><span class="vsp"></span></div>`}
+function go2(i,dir){if(i<0||i>=vList.length||i===vIdx)return;vIdx=i;vDate=true;drawViewer();const im=viewer.querySelector(".vimg");if(im){im.classList.add(dir>0?"in-r":"in-l")}}
+let vDate=false,vSwiped=false;
+function openViewer(list){vList=list;vIdx=0;vDate=false;drawViewer();viewer.hidden=false;if(!vOpen){vOpen=true;try{history.pushState({v:1},"")}catch(e){}}}
 function closeViewer(fromPop){if(!vOpen)return;vOpen=false;viewer.hidden=true;viewer.innerHTML="";if(!fromPop){try{history.back()}catch(e){}}}
 window.addEventListener("popstate",()=>{if(vOpen)closeViewer(true)});
-viewer.addEventListener("click",e=>{if(e.target.closest("#vx"))closeViewer(false)});
+viewer.addEventListener("click",e=>{if(e.target.closest("#vx"))return closeViewer(false);if(vSwiped){vSwiped=false;return}if(e.target.closest(".vimg")){vDate=!vDate;const d=viewer.querySelector(".vdate");if(d)d.style.visibility=vDate?"":"hidden"}});
 let tx=null;viewer.addEventListener("touchstart",e=>{tx=e.touches[0].clientX},{passive:true});
 viewer.addEventListener("touchend",e=>{if(tx===null)return;const dx=e.changedTouches[0].clientX-tx;tx=null;
- if(Math.abs(dx)>50)go2(vIdx+(dx<0?1:-1),dx<0?1:-1)});
+ if(Math.abs(dx)>50){vSwiped=true;setTimeout(()=>{vSwiped=false},400)}if(Math.abs(dx)>50)go2(vIdx+(dx<0?1:-1),dx<0?1:-1)});
 document.addEventListener("keydown",e=>{if(!vOpen)return;if(e.key==="Escape")closeViewer(false);if(e.key==="ArrowRight")go2(vIdx+1,1);if(e.key==="ArrowLeft")go2(vIdx-1,-1)});
 render();
 const splash=document.getElementById("splash");
